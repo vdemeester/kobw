@@ -1,0 +1,34 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: vdemeester/oc-builder
+  labels:
+    name: {{name}}
+  name: {{name}}
+spec:
+  source:
+    git:
+      uri: {{source}}
+      revision: {{revision}}
+    type: Git
+  output:
+    {{#toDocker}}
+    pushSecret:
+      name: dockerhub
+    to:
+      kind: DockerImage
+      name: {{image}}
+    {{/toDocker}}
+    {{^toDocker}}
+    # FIXME(vdemeester) implement that :D
+    {{/toDocker}}
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: {{imageStream}}
+        namespace: openshift
+    type: Source
+#  triggers:
+#  - type: ConfigChange
