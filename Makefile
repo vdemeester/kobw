@@ -1,3 +1,5 @@
+default: bin/oc bin/kobw
+
 bin:
 	mkdir -p bin
 
