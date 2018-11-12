@@ -4,14 +4,8 @@ sudo: required
 services:
   - docker
 
-jobs:
-  include:
-    - stage: build docker images 
-      script: make docker.io/vdemeester/kobw-builder
-    - stage: login to docker
-      script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - stage: push docker images
-      if: branch = master
-      script: docker push docker.io/vdemeester/kobw-base
-    - if: branch = master
-      script: docker push docker.io/vdemeester/kobw-builder
+script:
+  - make docker.io/vdemeester/kobw-builder
+  - [[ $TRAVIS_PULL_REQUEST == “false” ]] && [[ $TRAVIS_BRANCH == “master” ]] && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - [[ $TRAVIS_PULL_REQUEST == “false” ]] && [[ $TRAVIS_BRANCH == “master” ]] && docker push docker.io/vdemeester/kobw-base
+  - [[ $TRAVIS_PULL_REQUEST == “false” ]] && [[ $TRAVIS_BRANCH == “master” ]] && docker push docker.io/vdemeester/kobw-builder
