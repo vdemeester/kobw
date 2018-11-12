@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -66,7 +65,7 @@ func createCommand() *cobra.Command {
 				source = s
 				revision = "master"
 			}
-			template, err := ioutil.ReadFile("/spec.mustache")
+			template, err := FSByte(false, "/assets/spec.mustache")
 			if err != nil {
 				return err
 			}
