@@ -14,7 +14,7 @@ bin/kobw: bin bin/oc assets.go
 
 .PHONY: docker.io/vdemeester/kobw-builder
 docker.io/vdemeester/kobw-builder: docker.io/vdemeester/kobw-base
-	tar cf - bin/oc images/build.Dockerfile *.go vendor | docker build -t $@ -f images/build.Dockerfile -
+	tar cf - images/build.Dockerfile *.go vendor | docker build -t $@ -f images/build.Dockerfile -
 
 .PHONY: docker.io/vdemeester/kobw-base
 docker.io/vdemeester/kobw-base: bin/oc
