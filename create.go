@@ -69,13 +69,13 @@ func createCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			m := map[string]string{
+			m := map[string]interface{}{
 				"image":       opt.image,
 				"imageStream": opt.imageStream,
 				"name":        opt.name,
 				"revision":    revision,
 				"source":      source,
-				"toDocker":    fmt.Sprintf("%v", opt.toDocker),
+				"toDocker":    opt.toDocker,
 			}
 			yaml, err := mustache.Render(string(template), m)
 			if err != nil {

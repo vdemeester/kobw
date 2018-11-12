@@ -12,7 +12,7 @@ spec:
     description: The image stream to use as input for the build
   - name: TO_DOCKER
     description: Push the image to a Docker repository or not (true by default)
-    default: "true"
+    default: "false"
   - name: DIRECTORY
     description: The directory containing the app
     default: /workspace

@@ -13,6 +13,6 @@ spec:
     - name: IMAGE_STREAM
       value: python:3.6
     - name: IMAGE
-      value: docker.io/vdemeester/helloworld-python
+      value: "helloworld:latest"
     - name: NAME
       value: foo-build

@@ -212,15 +212,15 @@ var _escData = map[string]*_escFile{
 	"/assets/spec.mustache": {
 		name:    "spec.mustache",
 		local:   "assets/spec.mustache",
-		size:    668,
-		modtime: 1541758379,
+		size:    674,
+		modtime: 1542020652,
 		compressed: `
-H4sIAAAAAAAC/2xSPW/jMAzd9SsIZLkbkuBWjZe0RYZOLopOBWSbkYlYH5DoAIGQ/17IspM6rRdTfHyP
-1BOVp3cMkZyVUA/Utxvn0caOjrwhtz3/EyeyrYT/Gds5eyQtDLJqFSspAJS1jhWTszEfARZ0jRaDYmzX
-9UXCuUWDGBnD1jXrsRsGAdCrGvuJbpVBCSnl//UqfiSixyZXRjeEBgtHE5cAYAiUiws68vMX8EzliinN
-8QTyxaOEF2IB4Ab2wySV0ord3jUnDFOlH2JXYRPw1qyM1o5F3VAXPTejxbcicTBK44KVEuXcpJ3S9qFb
-Sp8PmRU8Hz5en/7cXfwLZHyPBi0Dd4pB7n9Vi5zfQF/KZMWbapEDOAZn5niefZy64oDKvCl9AxcXKPDN
-6YJGrxqU91X45nQ1dhcrAA6kNYYo82E9wWXDdp2yGsVXAAAA//+HzV+nnAIAAA==
+H4sIAAAAAAAC/5RSwW6DMAy95yssem6rXXNcJ007M+04yYAbrJYEJaZTFfHvUwi0oz2NC47f83uQZ+z5
+i3xgZzVUA5+bnevJhpaPsmO3v7yoE9tGw2vCDs4e2aiOBBsU1AoArXWCws6GdARYjRuy5FGo2VZXDSdX
+/SiAM1Z0ntkWO9IQY3qPo3pqhJ7qxAxu8DXlGcOSC4DBcyJndJpPj6cL5z+KcalnUK49aXhnUQBukH6Y
+pWLciHtz9Yn8zOyH0JZUe7qZ5U9rJlI7VFnPLWi+piJrfHRoqFjNFTFy6o5jMTvuHxxj/H7oPKlPuqV4
+wu4Tzf8MgqQkzDVL5isrVz2Ao3fdUi+ma88buATFd/gWQEZDjzXp+0L8CaCc3NUGQDwbQz7odNjOcN6z
+Q4vWkPoNAAD//xKQqkqiAgAA
 `,
 	},
 

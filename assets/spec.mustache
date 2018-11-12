@@ -2,7 +2,7 @@ apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
   annotations:
-    openshift.io/generated-by: vdemeester/oc-builder
+    openshift.io/generated-by: kobw
   labels:
     name: {{name}}
   name: {{name}}
@@ -17,11 +17,13 @@ spec:
     pushSecret:
       name: dockerhub
     to:
-      kind: DockerImage
-      name: {{image}}
+      kind: "DockerImage"
+      name: "{{image}}"
     {{/toDocker}}
     {{^toDocker}}
-    # FIXME(vdemeester) implement that :D
+    to:
+      kind: "ImageStreamTag"
+      name: "{{image}}"
     {{/toDocker}}
   strategy:
     sourceStrategy:
