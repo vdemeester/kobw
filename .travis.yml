@@ -7,4 +7,4 @@ services:
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - make docker.io/vdemeester/kobw-builder
-  - sh ./hack/push.sh
+  - ./hack/push.sh
