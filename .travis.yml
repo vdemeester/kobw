@@ -1,0 +1,21 @@
+language: go
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y git build-essentials
+
+script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - make docker.io/vdemeester/kobw-builder
+
+deploy:
+  provider: script
+  script:
+    - docker push docker.io/vdemeester/kobw-base
+    - docker push docker.io/vdemeester/kobw-builder
+  on:
+    branch: master
