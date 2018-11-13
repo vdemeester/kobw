@@ -22,7 +22,7 @@ docker.io/vdemeester/kobw-base: bin/oc
 
 .PHONY: clean
 clean:
-	oc delete buildtemplate.build.knative.dev,build.build.knative.dev,build,buildconfig --all
+	oc delete buildtemplate.build.knative.dev,build.build.knative.dev,build,buildconfig,imagestream --all
 
 .PHONY: run-build
 run-build: bin/kobw
