@@ -8,9 +8,15 @@ import (
 	"strings"
 
 	"github.com/cbroglie/mustache"
+	"github.com/docker/distribution/reference"
+	v1 "github.com/openshift/api/image/v1"
+	imagev1 "github.com/openshift/client-go/image/clientset/versioned/typed/image/v1"
 	"github.com/openshift/library-go/pkg/git"
 	s2igit "github.com/openshift/source-to-image/pkg/scm/git"
 	"github.com/spf13/cobra"
+	kuberrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 type createOption struct {
@@ -33,7 +39,7 @@ func validateCreateOpts(opt createOption) error {
 	return nil
 }
 
-func createCommand() *cobra.Command {
+func createCommand(opts kobwOptions) *cobra.Command {
 	var opt createOption
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -81,12 +87,46 @@ func createCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			config, err := clientcmd.BuildConfigFromFlags(opts.masterURL, opts.kubeconfig)
+			if err != nil {
+				return err
+			}
 			fmt.Println("Applying buildConfig:", yaml)
 			c := exec.Command("oc", "apply", "-f", "-")
 			c.Stdin = strings.NewReader(yaml)
 			c.Stdout = os.Stdout
 			c.Stderr = os.Stderr
-			return c.Run()
+			if err := c.Run(); err != nil {
+				return err
+			}
+			if !opt.toDocker {
+				ns := os.Getenv("NAMESPACE") // FIXME(vdemeester) try more things to get the namespace (like /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+				isClient, err := imagev1.NewForConfig(config)
+				if err != nil {
+					return err
+				}
+				ref, err := reference.Parse(opt.image)
+				if err != nil {
+					return err
+				}
+				image := ref.(reference.Named).Name() // FIXME(vdemeester) make this more robust
+				_, err = isClient.ImageStreams(ns).Get(image, metav1.GetOptions{})
+				if err != nil {
+					if !kuberrors.IsNotFound(err) {
+						return err
+					}
+					_, err = isClient.ImageStreams(ns).Create(&v1.ImageStream{
+						ObjectMeta: metav1.ObjectMeta{
+							Name:      image,
+							Namespace: ns,
+						},
+					})
+					if err != nil {
+						return err
+					}
+				}
+			}
+			return nil
 		},
 	}
 	cmd.Flags().StringVar(&opt.name, "name", "", "build configuration name")

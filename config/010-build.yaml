@@ -8,7 +8,7 @@ spec:
       url: https://github.com/vdemeester/os-sample-python
       revision: master
   template:
-    name: openshift-builds # change that
+    name: openshift-builds
     arguments:
     - name: IMAGE_STREAM
       value: python:3.6

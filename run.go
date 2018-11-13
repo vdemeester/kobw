@@ -21,7 +21,7 @@ func validateRunOpts(opt runOption) error {
 	return nil
 }
 
-func runCommand() *cobra.Command {
+func runCommand(opts kobwOptions) *cobra.Command {
 	var opt runOption
 	cmd := &cobra.Command{
 		Use:   "run",
