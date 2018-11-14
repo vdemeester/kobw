@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
-	"strings"
 
-	"github.com/cbroglie/mustache"
 	"github.com/docker/distribution/reference"
-	v1 "github.com/openshift/api/image/v1"
-	imagev1 "github.com/openshift/client-go/image/clientset/versioned/typed/image/v1"
+	buildv1 "github.com/openshift/api/build/v1"
+	imagev1 "github.com/openshift/api/image/v1"
+	buildclientsv1 "github.com/openshift/client-go/build/clientset/versioned/typed/build/v1"
+	imageclientsv1 "github.com/openshift/client-go/image/clientset/versioned/typed/image/v1"
 	"github.com/openshift/library-go/pkg/git"
 	s2igit "github.com/openshift/source-to-image/pkg/scm/git"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	corev1 "k8s.io/api/core/v1"
 	kuberrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
@@ -72,9 +72,13 @@ func createCommand(opts kobwOptions) *cobra.Command {
 	return cmd
 }
 
+func getCurrentNamespace() string {
+	return os.Getenv("NAMESPACE") // FIXME(vdemeester) try more things to get the namespace (like /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+}
+
 func createImageStreamIfNeeded(config *rest.Config, name string) error {
-	ns := os.Getenv("NAMESPACE") // FIXME(vdemeester) try more things to get the namespace (like /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-	isClient, err := imagev1.NewForConfig(config)
+	ns := getCurrentNamespace()
+	isClient, err := imageclientsv1.NewForConfig(config)
 	if err != nil {
 		return err
 	}
@@ -88,7 +92,7 @@ func createImageStreamIfNeeded(config *rest.Config, name string) error {
 		if !kuberrors.IsNotFound(err) {
 			return err
 		}
-		_, err = isClient.ImageStreams(ns).Create(&v1.ImageStream{
+		_, err = isClient.ImageStreams(ns).Create(&imagev1.ImageStream{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      image,
 				Namespace: ns,
@@ -106,28 +110,81 @@ func createBuildConfig(config *rest.Config, path string, opt createOption) error
 	if err != nil {
 		return err
 	}
-	template, err := FSByte(false, "/assets/spec.mustache")
+
+	ns := getCurrentNamespace()
+	buildV1Client, err := buildclientsv1.NewForConfig(config)
 	if err != nil {
 		return err
 	}
-	m := map[string]interface{}{
-		"image":       opt.image,
-		"imageStream": opt.imageStream,
-		"name":        opt.name,
-		"revision":    revision,
-		"source":      source,
-		"toDocker":    opt.toDocker,
+
+	buildsource := buildv1.BuildSource{
+		Type: buildv1.BuildSourceGit,
+		Git: &buildv1.GitBuildSource{
+			URI: source,
+			Ref: revision,
+		},
 	}
-	yaml, err := mustache.Render(string(template), m)
+	var buildoutput buildv1.BuildOutput
+	if opt.toDocker {
+		buildoutput = buildv1.BuildOutput{
+			PushSecret: &corev1.LocalObjectReference{
+				Name: "dockerhub",
+			},
+			To: &corev1.ObjectReference{
+				Kind: "DockerImage",
+				Name: opt.image,
+			},
+		}
+	} else {
+		buildoutput = buildv1.BuildOutput{
+			To: &corev1.ObjectReference{
+				Kind: "ImageStreamTag",
+				Name: opt.image,
+			},
+		}
+	}
+	buildstrategy := buildv1.BuildStrategy{
+		Type: buildv1.SourceBuildStrategyType,
+		SourceStrategy: &buildv1.SourceBuildStrategy{
+			From: corev1.ObjectReference{
+				Kind:      "ImageStreamTag",
+				Name:      opt.imageStream,
+				Namespace: "openshift",
+			},
+		},
+	}
+	bc := &buildv1.BuildConfig{
+		ObjectMeta: metav1.ObjectMeta{
+			Annotations: map[string]string{
+				"openshift.io/generated-by": "kobw",
+			},
+			Labels: map[string]string{
+				"name": opt.name,
+			},
+			Name: opt.name,
+		},
+		Spec: buildv1.BuildConfigSpec{
+			CommonSpec: buildv1.CommonSpec{
+				Source:   buildsource,
+				Output:   buildoutput,
+				Strategy: buildstrategy,
+			},
+		},
+	}
+	_, err = buildV1Client.BuildConfigs(ns).Get(opt.name, metav1.GetOptions{})
 	if err != nil {
-		return err
+		if !kuberrors.IsNotFound(err) {
+			return err
+		}
+		if _, err := buildV1Client.BuildConfigs(ns).Create(bc); err != nil {
+			return err
+		}
+	} else {
+		if _, err := buildV1Client.BuildConfigs(ns).Update(bc); err != nil {
+			return err
+		}
 	}
-	fmt.Println("Applying buildConfig:", yaml)
-	c := exec.Command("oc", "apply", "-f", "-")
-	c.Stdin = strings.NewReader(yaml)
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	return c.Run()
+	return nil
 }
 
 func detectSource(path string) (string, string, error) {

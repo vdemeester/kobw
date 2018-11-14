@@ -106,9 +106,10 @@
 
 [[projects]]
   branch = "release-3.11"
-  digest = "1:73dfdb83710736e3209bff0e012fde815adcd82e3ffa7c121d5b12063df88834"
+  digest = "1:ab6f75554dd52109e59877dfaf469a505276e660511d7557d16acc254f8c82d7"
   name = "github.com/openshift/api"
   packages = [
+    "build/v1",
     "image/docker10",
     "image/dockerpre012",
     "image/v1",
@@ -118,9 +119,11 @@
 
 [[projects]]
   branch = "release-3.11"
-  digest = "1:d880521c0a14409c7ee8cdedc96c400b1bb0de963a1ccb43ab1e92b352efcebb"
+  digest = "1:60ee4cb873e3331f7d0d00836aa747cbfda6fd318ad4af8ec1b6d903b06fd4e4"
   name = "github.com/openshift/client-go"
   packages = [
+    "build/clientset/versioned/scheme",
+    "build/clientset/versioned/typed/build/v1",
     "image/clientset/versioned/scheme",
     "image/clientset/versioned/typed/image/v1",
   ]
@@ -149,6 +152,14 @@
   pruneopts = "UT"
   revision = "78a76d9704793852ec10829cb00b331fd6054758"
   version = "v1.1.11"
+
+[[projects]]
+  digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   digest = "1:645cabccbb4fa8aab25a956cbcbdf6a6845ca736b2c64e197ca7cbb9d210b939"
@@ -334,12 +345,15 @@
     "github.com/cbroglie/mustache",
     "github.com/docker/distribution/reference",
     "github.com/openshift/api/image/v1",
+    "github.com/openshift/client-go/build/clientset/versioned/typed/build/v1",
     "github.com/openshift/client-go/image/clientset/versioned/typed/image/v1",
     "github.com/openshift/library-go/pkg/git",
     "github.com/openshift/source-to-image/pkg/scm/git",
+    "github.com/pkg/errors",
     "github.com/spf13/cobra",
     "k8s.io/apimachinery/pkg/api/errors",
     "k8s.io/apimachinery/pkg/apis/meta/v1",
+    "k8s.io/client-go/rest",
     "k8s.io/client-go/tools/clientcmd",
   ]
   solver-name = "gps-cdcl"
