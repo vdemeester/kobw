@@ -20,7 +20,7 @@ spec:
     description: The name of the builder image to use
     default: github.com/vdemeester/kobw
   steps:
-  - name: oc-create-or-update-build
+  - name: kobw-create-or-update
     image: "${OC_BUILDER_IMAGE}"
     args: ["create", "--name=${NAME}", "--image=${IMAGE}", "--image-stream=${IMAGE_STREAM}", "--to-docker=${TO_DOCKER}", "."]
     workingDir: "${DIRECTORY}"
@@ -29,7 +29,7 @@ spec:
         valueFrom:
           fieldRef:
             fieldPath: metadata.namespace
-  - name: oc-build
+  - name: kobw-run
     image: "${OC_BUILDER_IMAGE}"
     args: ["run", "--name=${NAME}"]
     env:
