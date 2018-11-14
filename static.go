@@ -209,21 +209,6 @@ func FSMustString(useLocal bool, name string) string {
 
 var _escData = map[string]*_escFile{
 
-	"/assets/spec.mustache": {
-		name:    "spec.mustache",
-		local:   "assets/spec.mustache",
-		size:    674,
-		modtime: 1542020652,
-		compressed: `
-H4sIAAAAAAAC/5RSwW6DMAy95yssem6rXXNcJ007M+04yYAbrJYEJaZTFfHvUwi0oz2NC47f83uQZ+z5
-i3xgZzVUA5+bnevJhpaPsmO3v7yoE9tGw2vCDs4e2aiOBBsU1AoArXWCws6GdARYjRuy5FGo2VZXDSdX
-/SiAM1Z0ntkWO9IQY3qPo3pqhJ7qxAxu8DXlGcOSC4DBcyJndJpPj6cL5z+KcalnUK49aXhnUQBukH6Y
-pWLciHtz9Yn8zOyH0JZUe7qZ5U9rJlI7VFnPLWi+piJrfHRoqFjNFTFy6o5jMTvuHxxj/H7oPKlPuqV4
-wu4Tzf8MgqQkzDVL5isrVz2Ao3fdUi+ma88buATFd/gWQEZDjzXp+0L8CaCc3NUGQDwbQz7odNjOcN6z
-Q4vWkPoNAAD//xKQqkqiAgAA
-`,
-	},
-
 	"/assets": {
 		name:  "assets",
 		local: `assets`,
@@ -233,7 +218,5 @@ Q4vWkPoNAAD//xKQqkqiAgAA
 
 var _escDirs = map[string][]os.FileInfo{
 
-	"assets": {
-		_escData["/assets/spec.mustache"],
-	},
+	"assets": {},
 }

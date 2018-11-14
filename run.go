@@ -1,13 +1,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
-	"os/exec"
-	"syscall"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 type runOption struct {
@@ -28,18 +26,11 @@ func runCommand(opts kobwOptions) *cobra.Command {
 		Short: "run the build and show logs",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fmt.Println("Run build:", opt.name)
-			c := exec.Command("oc", "start-build", opt.name, "--follow")
-			c.Stdout = os.Stdout
-			c.Stderr = os.Stderr
-			if err := c.Start(); err != nil {
-				return err
+			config, err := clientcmd.BuildConfigFromFlags(opts.masterURL, opts.kubeconfig)
+			if err != nil {
+				return errors.Wrap(err, "could not create kubernetes client config")
 			}
-			if err := c.Wait(); err != nil {
-				if exiterr, ok := err.(*exec.ExitError); ok {
-					if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
-						fmt.Println("ExitStatus:", status.ExitStatus())
-					}
-				}
+			if err := startBuild(config, opt.name); err != nil {
 				return err
 			}
 			return nil
