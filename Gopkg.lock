@@ -2,14 +2,6 @@
 
 
 [[projects]]
-  digest = "1:c08f898868838e16e9f6caa00ea6eeb2bcbfcd8a374f602c3e3b305092079a3f"
-  name = "github.com/cbroglie/mustache"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "eb931a9d20042e51d8a3a9ad5a9ba9bc8282c564"
-  version = "v1.0.1"
-
-[[projects]]
   branch = "openshift-3.10-docker-edc3ab2"
   digest = "1:4189ee6a3844f555124d9d2656fe7af02fca961c2a9bad9074789df13a0c62e0"
   name = "github.com/docker/distribution"
@@ -137,6 +129,17 @@
   packages = ["pkg/git"]
   pruneopts = "UT"
   revision = "0b8367a4679859036c27a30dbe010d76409e7075"
+
+[[projects]]
+  branch = "release-3.11"
+  digest = "1:f3245fc9073f7859720c9366e1da89bff50d1c3b666837b20811a93d062026dd"
+  name = "github.com/openshift/origin"
+  packages = [
+    "pkg/build/client/v1",
+    "pkg/oc/lib/errors",
+  ]
+  pruneopts = "UT"
+  revision = "314d321dcb28ae4bdc44c00b8de0b030e11d8ad5"
 
 [[projects]]
   digest = "1:fec9eabf5d732189321cf8a0187a8dbf61c753efe39c43041f1e8228600b7700"
@@ -338,21 +341,34 @@
   revision = "b28cdde46f9c296b8ecde9c0bed0d215b6cda59d"
   source = "github.com/openshift/kubernetes-client-go"
 
+[[projects]]
+  branch = "origin-3.11-kubernetes-1.11.1"
+  digest = "1:b3ec5a5d5bdddb8b326c0abb9bfb97ea78ed03e10856daa8f7fa57f6d4dfabdd"
+  name = "k8s.io/kubernetes"
+  packages = ["pkg/api/legacyscheme"]
+  pruneopts = "UT"
+  revision = "22b8c511baaf712194dee3eb9c6d8e96d282d3a5"
+  source = "github.com/openshift/kubernetes"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/cbroglie/mustache",
     "github.com/docker/distribution/reference",
+    "github.com/openshift/api/build/v1",
     "github.com/openshift/api/image/v1",
     "github.com/openshift/client-go/build/clientset/versioned/typed/build/v1",
     "github.com/openshift/client-go/image/clientset/versioned/typed/image/v1",
     "github.com/openshift/library-go/pkg/git",
+    "github.com/openshift/origin/pkg/build/client/v1",
+    "github.com/openshift/origin/pkg/oc/lib/errors",
     "github.com/openshift/source-to-image/pkg/scm/git",
     "github.com/pkg/errors",
     "github.com/spf13/cobra",
+    "k8s.io/api/core/v1",
     "k8s.io/apimachinery/pkg/api/errors",
     "k8s.io/apimachinery/pkg/apis/meta/v1",
+    "k8s.io/apimachinery/pkg/fields",
     "k8s.io/client-go/rest",
     "k8s.io/client-go/tools/clientcmd",
   ]
