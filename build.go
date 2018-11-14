@@ -73,7 +73,8 @@ func startBuild(config *rest.Config, name string) error {
 	}
 	fmt.Println("name", b.Name)
 
-	return logAndWait(buildV1Client, ns, b.Name)
+	return waitForBuildComplete(buildV1Client.Builds(ns), b.Name)
+	// return logAndWait(buildV1Client, ns, b.Name)
 }
 
 func logAndWait(buildV1Client *buildclientsv1.BuildV1Client, ns, buildName string) error {
