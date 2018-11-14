@@ -14,8 +14,8 @@ docker.io/vdemeester/kobw-builder: docker.io/vdemeester/kobw-base
 	tar cf - images/build.Dockerfile *.go vendor | docker build -t $@ -f images/build.Dockerfile -
 
 .PHONY: docker.io/vdemeester/kobw-base
-docker.io/vdemeester/kobw-base: bin/oc
-	tar cf - bin/oc images/base.Dockerfile | docker build -t $@ -f images/base.Dockerfile -
+docker.io/vdemeester/kobw-base:
+	tar cf - images/base.Dockerfile | docker build -t $@ -f images/base.Dockerfile -
 
 .PHONY: clean
 clean:
