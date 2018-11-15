@@ -3,10 +3,7 @@ default: bin/oc bin/kobw
 bin:
 	mkdir -p bin
 
-assets.go:
-	go generate
-
-bin/kobw: bin assets.go
+bin/kobw: bin
 	go build -o bin/kotw -v .
 
 .PHONY: docker.io/vdemeester/kobw-builder

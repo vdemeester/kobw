@@ -1,6 +1,5 @@
 package main
 
-//go:generate esc -o static.go -pkg main assets
 import (
 	"fmt"
 	"io/ioutil"
