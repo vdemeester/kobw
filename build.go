@@ -218,7 +218,7 @@ func createBuildConfig(config *rest.Config, path string, opt createOption) error
 			},
 		},
 	}
-	_, err = buildV1Client.BuildConfigs(ns).Get(opt.name, metav1.GetOptions{})
+	obc, err := buildV1Client.BuildConfigs(ns).Get(opt.name, metav1.GetOptions{})
 	if err != nil {
 		if !kuberrors.IsNotFound(err) {
 			return err
@@ -227,6 +227,7 @@ func createBuildConfig(config *rest.Config, path string, opt createOption) error
 			return err
 		}
 	} else {
+		bc.ResourceVersion = obc.ResourceVersion
 		if _, err := buildV1Client.BuildConfigs(ns).Update(bc); err != nil {
 			return err
 		}
