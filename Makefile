@@ -1,10 +1,10 @@
-default: bin/oc bin/kobw
+default: bin/kobw
 
 bin:
 	mkdir -p bin
 
 bin/kobw: bin
-	go build -o bin/kotw -v .
+	go build -o bin/kobw -v .
 
 .PHONY: docker.io/vdemeester/kobw-builder
 docker.io/vdemeester/kobw-builder: docker.io/vdemeester/kobw-base
