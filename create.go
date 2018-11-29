@@ -78,8 +78,14 @@ func detectSource(path string) (string, string, error) {
 		if !ok {
 			return "", "", fmt.Errorf("source is not supported %s (git: %s, %s)", path, url, remote)
 		}
+
+		info, errs := gitRepo.GetInfo(path)
+		if errs != nil && len(errs) > 0 {
+			return "", "", fmt.Errorf("could not get information for repository: %v", errs)
+		}
+
 		source = remote
-		revision = gitRepo.GetRef(path)
+		revision = info.CommitID
 	} else {
 		source = path
 		revision = "master"
